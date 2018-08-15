@@ -9,7 +9,7 @@ export default class Note extends Component {
   render() {
     const {taskList, removeTask} = this.props;
     return (
-      <div>
+      <div className="tasksList">
         <div className="tasksHeader">
           <div>Tasks Pending - <span>{taskList.length}</span></div>
         </div>

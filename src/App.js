@@ -10,6 +10,7 @@ import {FIREBASE_CONFIG} from './Config/config';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
+import 'firebase';
 
 
 class App extends Component {
@@ -68,6 +69,7 @@ class App extends Component {
   }
 
   addNewTask(content) {
+    const uid = this.app.auth().currentUser.uid;
     this.database.push().set({task: content});
   }
 
@@ -81,7 +83,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Todo List</h1>
-          {user ? <div className="App-title" onClick={() => {this.app.auth().signOut()}}>Sign out</div> : null}
+          {user ? <div className="App-title signOut" onClick={() => {this.app.auth().signOut()}}>Sign out</div> : null}
         </header>
         {
           user ?

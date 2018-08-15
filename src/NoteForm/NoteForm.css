@@ -20,5 +20,6 @@
     width: 10%;
     min-height: 50px;
     text-align: center;
-    display: inline-block
+    display: inline-block;
+    font-size: 14px;
 }

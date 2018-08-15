@@ -16,6 +16,7 @@
 .content {
   padding: 10px;
   text-align: center;
+  font-family: monospace;
 }
 .task button {
   text-align: center;
@@ -27,4 +28,10 @@
 }
 .task:hover {
   box-shadow: 0px 8px 12px 4px rgba(0,0,0,0.2);
+}
+
+.tasksList {
+  overflow: scroll;
+  height: 65vh;
+  padding-bottom: 10px;
 }
