@@ -1,0 +1,24 @@
+.taskInput {
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-bottom: 10px;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+}
+
+.taskInput input {
+    box-sizing: border-box;
+    width: 80%;
+    min-height: 50px;
+    padding-left: 10px;
+
+}
+
+.addtaskBtn {
+    box-sizing: border-box;
+    width: 10%;
+    min-height: 50px;
+    text-align: center;
+    display: inline-block
+}
