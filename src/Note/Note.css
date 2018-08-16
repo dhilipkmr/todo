@@ -17,6 +17,8 @@
   padding: 10px;
   text-align: center;
   font-family: monospace;
+  color: #006A7B;
+  font-weight: 600;
 }
 .task button {
   text-align: center;
@@ -34,4 +36,8 @@
   overflow: scroll;
   height: 65vh;
   padding-bottom: 10px;
+}
+
+.pending {
+  font-weight: 600;
 }

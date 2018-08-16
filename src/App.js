@@ -19,8 +19,8 @@ class App extends Component {
     this.addNewTask = this.addNewTask.bind(this);
     this.removeTask = this.removeTask.bind(this);
     this.addTaskListener = this.addTaskListener.bind(this);
-    this.removeTaskListener = this.removeTaskListener.bind(this);
     this.authListener = this.authListener.bind(this);
+    this.addTaskToState = this.addTaskToState.bind(this);
     this.app = firebase.initializeApp(FIREBASE_CONFIG);
     this.database = this.app.database().ref().child('TodoList');
     this.state = {
@@ -31,50 +31,61 @@ class App extends Component {
   componentWillMount() {
     this.authListener();
     this.addTaskListener();
-    this.removeTaskListener();
   }
 
   authListener() {
-    this.app.auth().onAuthStateChanged((user)=>{
+    this.app.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log(user);
         this.setState({user});
       } else {
         this.setState({user: null});
       }
+      this.uid = this.app.auth().currentUser.uid;
     });
   }
 
   addTaskListener() {
-    const {taskList} = this.state;
     this.database.on('child_added', snap => {
-      taskList.push({
-        id : snap.key,
-        task : snap.val().task
-      });
-      this.setState({taskList});
+      const entry = snap.val()[`${this.uid}`];
+      if (entry) {
+        const key = Object.keys(entry)[0];
+        this.addTaskToState(key, entry[key].task);
+        snap.ref.child(`${this.uid}`).on('child_added', addSnap => {
+          this.addTaskToState(addSnap.key, addSnap.val().task, true);
+        });
+        snap.ref.child(`${this.uid}`).on('child_removed', removeSnap => {
+          this.addTaskToState(removeSnap.key, removeSnap.val().task, false);
+        });
+      }
     });
   }
 
-  removeTaskListener() {
+  addTaskToState(id, task, isAdded) {
     const {taskList} = this.state;
-    this.database.on('child_removed', snap => {
+    if (isAdded) {
+      taskList.push({id: id, task: task});
+      this.setState({taskList});
+    } else {
       taskList.forEach((taskEntry, index) => {
-        if (taskEntry.id === snap.key) {
+        if (taskEntry.id === id) {
           taskList.splice(index, 1);
         }
       });
       this.setState({taskList});
-    });
+    }
   }
 
   addNewTask(content) {
-    const uid = this.app.auth().currentUser.uid;
-    this.database.push().set({task: content});
+    if (this.database.ref.child(`users/${this.uid}`)) {
+      this.database.ref.child(`users/${this.uid}`).push({task: content});
+    } else {
+      this.database.ref.child(`users/${this.uid}`).set({task: content});
+    }
   }
 
   removeTask(id) {
-    this.database.child(id).remove();
+    this.database.ref.child(`users/${this.uid}/${id}`).remove();
   }
 
   render() {

@@ -56,7 +56,7 @@ export default class Login extends Component {
         <input placeholder="PASSWORD" type="password" value={password} onChange={(e) => {this.handleOnchange(PASSWORD, e.target.value)}}/>
         </div>
         <div className="buttonFooter">
-          {/* <button className="signUp" onClick={this.signUp}>Sign Up</button> */}
+          <button className="signUp" onClick={this.signUp}>Sign Up</button>
           <button className="login" onClick={this.signIn}>Login</button>
         </div>
       </div>
