@@ -1,5 +1,5 @@
 .loginContainer {
-    margin-top: 40%;
+    margin-top: 30vh;
 }
 
 .email input, .password input  {
@@ -32,4 +32,5 @@ input:focus {
     color: #006A7B;
     font-weight: 600;
     margin: 5px 10px 10px 5px;
+    background-color: white;
 }

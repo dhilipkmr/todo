@@ -21,6 +21,7 @@ class App extends Component {
     this.addTaskListener = this.addTaskListener.bind(this);
     this.authListener = this.authListener.bind(this);
     this.addTaskToState = this.addTaskToState.bind(this);
+    this.signOut = this.signOut.bind(this);
     this.app = firebase.initializeApp(FIREBASE_CONFIG);
     this.database = this.app.database().ref().child('TodoList');
     this.state = {
@@ -36,9 +37,13 @@ class App extends Component {
   authListener() {
     this.app.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log(user);
+        if (!localStorage.user) {
+          localStorage.setItem('user', JSON.stringify(user));
+          window.location.reload();
+        }
         this.setState({user});
       } else {
+        localStorage.removeItem('user');
         this.setState({user: null});
       }
       this.uid = this.app.auth().currentUser.uid;
@@ -84,6 +89,12 @@ class App extends Component {
     }
   }
 
+  signOut() {
+    this.app.auth().signOut();
+    localStorage.removeItem('user');
+    window.location.reload();
+  }
+
   removeTask(id) {
     this.database.ref.child(`users/${this.uid}/${id}`).remove();
   }
@@ -94,10 +105,10 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Todo List</h1>
-          {user ? <div className="App-title signOut" onClick={() => {this.app.auth().signOut()}}>Sign out</div> : null}
+          {user ? <div className="App-title signOut" onClick={this.signOut}>Sign out</div> : null}
         </header>
         {
-          user ?
+          localStorage.user ?
           <div>
             <Note taskList={taskList} removeTask={this.removeTask}/>
             <NoteForm addNewTask={this.addNewTask}/>
